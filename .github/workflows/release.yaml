@@ -7,6 +7,10 @@ on:  # yamllint disable-line rule:truthy
     branches:
     - main
 
+# Keep sync'd with Dockerfile, and Makefile
+env:
+  OPENSSL_VERSION: 1.1.1s
+
 jobs:
   release:
     name: Create Release
@@ -63,6 +67,7 @@ jobs:
           type=ref,event=branch
           type=semver,pattern={{version}},value=${{ needs.release.outputs.release-git-tag }}
           type=semver,pattern={{major}},value=${{ needs.release.outputs.release-git-tag }}
+          type=raw,value=${{ env.OPENSSL_VERSION }}
     - name: Retag and Push
       if: ${{ needs.release.outputs.published == 'true' }}
       run: |

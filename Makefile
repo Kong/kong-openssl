@@ -6,6 +6,7 @@ DOCKER_IMAGE_NAME ?= kong-openssl
 DOCKER_IMAGE_TAG ?= $(DOCKER_TARGET)-$(ARCHITECTURE)-$(OSTYPE)
 DOCKER_NAME ?= $(DOCKER_REGISTRY)/$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)
 DOCKER_RESULT ?= --load
+OPENSSL_VERSION ?= 1.1.1s # Keep sync'd with release.yaml and Dockerfile
 
 clean:
 	rm -rf package
@@ -18,6 +19,7 @@ docker:
 		--build-arg DOCKER_IMAGE_TAG=$(DOCKER_IMAGE_TAG) \
 		--build-arg ARCHITECTURE=$(ARCHITECTURE) \
 		--build-arg OSTYPE=$(OSTYPE) \
+		--build-arg OPENSSL_VERSION=$(OPENSSL_VERSION) \
 		--target=$(DOCKER_TARGET) \
 		-t $(DOCKER_NAME) \
 		$(DOCKER_RESULT) .
