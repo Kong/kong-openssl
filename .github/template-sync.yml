@@ -1,0 +1,18 @@
+---
+additional:
+
+files:
+- '!README.md'
+- '!.pre-commit-config.yaml'
+- '!.secrets.baseline'
+- '!**/template-sync.yml'
+- '!.github/workflows/sync.yml'
+- '!.github/PULL_REQUEST_TEMPLATE.md'
+- '!**/CODEOWNERS'
+- '!.yamllint'
+- '!Dockerfile'
+- '!build.sh'
+- '!test.sh'
+- .github/workflows/release.yaml
+- .releaserc
+- Makefile
