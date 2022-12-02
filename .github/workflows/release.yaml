@@ -54,6 +54,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Docker meta
+      if: ${{ needs.release.outputs.published == 'true' }}
       id: meta
       uses: docker/metadata-action@v4
       with:
@@ -64,6 +65,8 @@ jobs:
         tags: |
           type=sha
           type=ref,event=branch
+          type=semver,pattern={{version}},value=${{ needs.release.outputs.release-git-tag }}
+          type=semver,pattern={{major}},value=${{ needs.release.outputs.release-git-tag }}
           type=raw,value=${{ env.OPENSSL_VERSION }}
     - name: Retag and Push
       if: ${{ needs.release.outputs.published == 'true' }}
