@@ -54,7 +54,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v4
       with:
-        images: ghcr.io/kong/template-github-release
+        images: ghcr.io/kong/kong-openssl
         sep-tags: ' '
         flavor: |
           suffix=-${{ matrix.architecture }}-${{ matrix.ostype }}
@@ -67,7 +67,7 @@ jobs:
       if: ${{ needs.release.outputs.published == 'true' }}
       run: |
         for tag in ${{ steps.meta.outputs.tags }}; do \
-          docker tag ghcr.io/template-github-release:build-$ARCHITECTURE-$OSTYPE $tag && \
+          docker tag ghcr.io/kong-openssl:build-$ARCHITECTURE-$OSTYPE $tag && \
           docker push $tag; \
         done
     - name: Archive the package
