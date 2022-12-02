@@ -1,7 +1,7 @@
 {
   "branches": ["main"],
   "tagFormat": "${version}",
-  "repositoryUrl": "https://github.com/kong/template-github-release.git",
+  "repositoryUrl": "https://github.com/kong/kong-openssl.git",
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
