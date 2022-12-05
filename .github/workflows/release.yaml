@@ -11,6 +11,10 @@ on:  # yamllint disable-line rule:truthy
 env:
   OPENSSL_VERSION: 1.1.1s
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   release:
     name: Create Release
