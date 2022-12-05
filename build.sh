@@ -11,7 +11,6 @@ export $(grep -v '^#' $SCRIPT_DIR/.env | xargs)
 
 function main() {
     mkdir -p /tmp/build
-    rm -rf /tmp/build/*
     with_backoff curl --fail -sSLo openssl.tar.gz "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
     tar -xzvf openssl.tar.gz
     pushd openssl-${OPENSSL_VERSION}
