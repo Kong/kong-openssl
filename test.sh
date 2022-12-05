@@ -13,6 +13,7 @@ function test() {
     cp -R /tmp/build/* /
     /usr/local/kong/bin/openssl version
     /usr/local/kong/bin/openssl version | grep -q $OPENSSL_VERSION
+    ls -la /usr/local/kong/lib/libyaml.so
 }
 
 test
