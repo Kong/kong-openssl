@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 IFS=$'\n\t'
 
 if [ -n "${DEBUG:-}" ]; then
     set -x
 fi
 
-if [[ -z "$OPENSSL_VERSION" ]]; then
+if [[ -z "${OPENSSL_VERSION}" ]]; then
     echo "Must provide OPENSSL_VERSION in environment" 1>&2
     exit 1
 fi
