@@ -4,6 +4,13 @@ This repository provides pre-built openssl artifacts for use by Kong Gateway.
 
 ## Getting Started
 
+### Updating the OpenSSL Version
+
+Update the OpenSSL variable in the following files:
+- Makefile
+- Dockerfile
+- .ci/workflows/release.yaml
+
 ### Using
 
 Use the most recent artifact that matches your CPU architecutre and OSTYPE
@@ -26,12 +33,15 @@ curl --fail -sSLo openssl.tar.gz https://github.com/Kong/kong-openssl/releases/d
 tar -C /tmp/build -xvf openssl.tar.gz
 ```
 
-### Updating the OpenSSL Version
+The gcr.io docker tag naming setup is:
+```
+gcr.io/kong/kong-openssl:${GITHUB_RELEASE}-${ARCHITECTURE}-${OSTYPE}
+# Example gcr.io/kong/kong-openssl:1.1.0-aarch64-linux-musl
 
-Update the OpenSSL variable in the following files:
-- Makefile
-- Dockerfile
-- .ci/workflows/release.yaml
+gcro.io/kong/kong-openssl:${OPENSSL_VERSION}-${ARCHITECTURE}-${OSTYPE}
+# Example gcr.io/kong/kong-openssl:1.1.1s-aarch64-linux-musl
+```
+The second tag is available for convenience and it is mutable. If you use it please pin the SHA
 
 ### Building
 
