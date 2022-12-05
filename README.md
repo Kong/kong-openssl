@@ -6,10 +6,7 @@ This repository provides pre-built openssl artifacts for use by Kong Gateway.
 
 ### Updating the OpenSSL Version
 
-Update the OpenSSL variable in the following files:
-- Makefile
-- Dockerfile
-- .ci/workflows/release.yaml
+Update the OpenSSL variable in the `.env` file.
 
 ### Using
 
