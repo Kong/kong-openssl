@@ -7,10 +7,6 @@ on:  # yamllint disable-line rule:truthy
     branches:
     - main
 
-# Keep sync'd with Dockerfile, and Makefile
-env:
-  OPENSSL_VERSION: 1.1.1s
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -89,3 +85,28 @@ jobs:
       with:
         tag_name: ${{ needs.release.outputs.release-git-tag }}
         files: ${{ matrix.architecture }}-${{ matrix.ostype }}.tar.gz
+
+  multi-arch:
+    needs: [release, artifacts]
+    name: Create Release Artifacts
+    if: ${{ needs.release.outputs.published == 'true' }}
+    strategy:
+      matrix:
+        ostype: [linux-gnu, linux-musl]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in to the Container registry
+      if: ${{ needs.release.outputs.published == 'true' }}
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Combine per architecture images into a single multi-arch manifest
+      run: |
+        docker pull ghcr.io/kong/kong-openssl:${{ needs.release.outputs.release-git-tag }}-aarch64-${{ matrix.ostype }}
+        docker pull ghcr.io/kong/kong-openssl:${{ needs.release.outputs.release-git-tag }}-x86_64-${{ matrix.ostype }}
+        docker manifest create ghcr.io/kong/kong-openssl:${{ needs.release.outputs.release-git-tag }}-${{ matrix.ostype }} \
+          ghcr.io/kong/kong-openssl:${{ needs.release.outputs.release-git-tag }}-aarch64-${{ matrix.ostype }} \
+          ghcr.io/kong/kong-openssl:${{ needs.release.outputs.release-git-tag }}-x86_64-${{ matrix.ostype }}
+        docker manifest push ghcr.io/kong/kong-openssl:${{ needs.release.outputs.release-git-tag }}-${{ matrix.ostype }}
