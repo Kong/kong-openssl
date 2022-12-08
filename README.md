@@ -32,6 +32,9 @@ tar -C /tmp/build -xvf openssl.tar.gz
 
 The gcr.io docker tag naming setup is:
 ```
+ghcr.io/kong/kong-openssl:${GITHUB_RELEASE}-${OSTYPE}
+# Example gcr.io/kong/kong-openssl:1.1.4-linux-musl which is a multi-architecture image
+
 ghcr.io/kong/kong-openssl:${GITHUB_RELEASE}-${ARCHITECTURE}-${OSTYPE}
 # Example gcr.io/kong/kong-openssl:1.1.0-aarch64-linux-musl
 

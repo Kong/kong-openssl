@@ -41,6 +41,7 @@ jobs:
     - uses: docker/setup-buildx-action@v2
     - name: Set environment variables
       run: |
+        grep -v '^#' .requirements >> $GITHUB_ENV
         echo "ARCHITECTURE=${{ matrix.architecture }}" >> $GITHUB_ENV
         echo "OSTYPE=${{ matrix.ostype }}" >> $GITHUB_ENV
         echo "REGISTRY=ghcr.io"
