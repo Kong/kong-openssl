@@ -7,7 +7,7 @@ if [ -n "${DEBUG:-}" ]; then
 fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-export $(grep -v '^#' $SCRIPT_DIR/.env | xargs)
+export $(grep -v '^#' $SCRIPT_DIR/.env)
 
 function test() {
     echo '--- testing openssl ---'
