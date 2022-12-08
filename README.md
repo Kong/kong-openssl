@@ -57,7 +57,6 @@ Prerequisites:
 # Set desired environment variables. If not set the below are the defaults when this document was written
 ARCHITECTURE=x86_64
 OSTYPE=linux-gnu
-OPENSSL_VERSION=1.1.1s
 
 make build/package
 ```
@@ -69,7 +68,6 @@ The same result without `make`
 ```
 ARCHITECTURE=x86_64
 OSTYPE=linux-gnu
-OPENSSL_VERSION=1.1.1s
 
 docker buildx build \
     --build-arg ARCHITECTURE=$(ARCHITECTURE) \
@@ -85,7 +83,6 @@ A **similar** result without `docker`
 ```
 ARCHITECTURE=x86_64
 OSTYPE=linux-gnu
-OPENSSL_VERSION=1.1.1s
 
 ./build.sh
 
