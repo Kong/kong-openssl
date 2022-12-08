@@ -10,6 +10,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export $(grep -v '^#' $SCRIPT_DIR/.env | xargs)
 
 function main() {
+    echo '--- installing openssl ---'
     mkdir -p /tmp/build
     with_backoff curl --fail -sSLo openssl.tar.gz "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
     tar -xzvf openssl.tar.gz
@@ -22,6 +23,7 @@ function main() {
         make -j2 && \
         make install_sw DESTDIR=/tmp/build
     popd
+    echo '--- installed openssl ---'
 }
 
 
