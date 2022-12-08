@@ -11,9 +11,13 @@ export $(grep -v '^#' $SCRIPT_DIR/.env | xargs)
 
 function test() {
     cp -R /tmp/build/* /
+    mv /tmp/build /tmp/buffer # Check we didn't link dependencies to `/tmp/build/...`
+
     /usr/local/kong/bin/openssl version
     /usr/local/kong/bin/openssl version | grep -q $OPENSSL_VERSION
-    ls -la /usr/local/kong/lib/libyaml.so
+    ldd /usr/local/kong/lib/libyaml.so
+
+    mv /tmp/buffer /tmp/build
 }
 
 test
