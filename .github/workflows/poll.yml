@@ -61,6 +61,8 @@ jobs:
           git add .env
           git commit -m "chore(*): update OpenSSL to ${fresh}"
 
+          git push origin chore/openssl-${fresh}
+
           pr="$(gh pr create --fill | grep -Eo '\d+$')"
 
           gh pr merge --auto "$pr"
