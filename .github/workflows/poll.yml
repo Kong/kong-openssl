@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Create PR
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ secrets.GHA_KONG_BOT_READ_TOKEN }}
         DEBUG: ${{ runner.debug == '1' && '1' || '' }}
       run: |
         if [ -n "${DEBUG:-}" ]; then
@@ -39,6 +39,8 @@ jobs:
           if gh pr list | grep "$message"; then
             exit 0
           fi
+
+          gh auth setup-git
 
           git checkout -b chore/openssl-${fresh}
 
