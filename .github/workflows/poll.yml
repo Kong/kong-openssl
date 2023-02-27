@@ -3,8 +3,8 @@ name: Release
 
 on: # yamllint disable-line rule:truthy
   schedule:
-    # wednesday, friday at 00:00
-    - cron: '0 0 * * 3,5'
+  # wednesday, friday at 00:00
+  - cron: 0 0 * * 3,5
   workflow_dispatch:
 
 jobs:
@@ -12,40 +12,41 @@ jobs:
     name: Poll OpenSSL Website
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - env:
-          GITHUB_TOKEN: ${{ secrets.token }}
-          DEBUG: ${{ runner.debug == '1' && '1' || '' }}
-        run: |
-          if [ -n "${DEBUG:-}" ]; then
-            set -x
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Create PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.token }}
+        DEBUG: ${{ runner.debug == '1' && '1' || '' }}
+      run: |
+        if [ -n "${DEBUG:-}" ]; then
+          set -x
+        fi
+
+        fresh="$(
+          grep -Eo -m1 -i '1\.1\.1.*available' <(
+            curl -Ls 'https://www.openssl.org/news/newslog.html'
+          ) | cut -d' ' -f1
+        )"
+
+        stale="$(cat .env)"
+
+        message="chore(*): update OpenSSL to ${fresh}"
+
+        if [[ "$fresh" != "$stale" ]] ; then
+
+          # PR already created for fresh version
+          if gh pr list | grep "$message"; then
+            exit 0
           fi
 
-          fresh="$(
-            grep -Eo -m1 -i '1\.1\.1.*available' <(
-              curl -Ls 'https://www.openssl.org/news/newslog.html'
-            ) | cut -d' ' -f1
-          )"
+          git checkout -b chore/openssl-${fresh}
 
-          stale="$(cat .env)"
+          echo "$fresh" > .env
+          git add .env
+          git commit -m "chore(*): update OpenSSL to ${fresh}"
 
-          message="chore(*): update OpenSSL to ${fresh}"
+          pr="$(gh pr create --fill | grep -Eo '\d+$')"
 
-          if [[ "$fresh" != "$stale" ]] ; then
-
-            # PR already created for fresh version
-            if gh pr list | grep "$message"; then
-              exit 0
-            fi
-
-            git checkout -b chore/openssl-${fresh}
-
-            echo "$fresh" > .env
-            git add .env
-            git commit -m "chore(*): update OpenSSL to ${fresh}"
-
-            pr="$(gh pr create --fill | grep -Eo '\d+$')"
-
-            gh pr merge --auto "$pr"
-          fi
+          gh pr merge --auto "$pr"
+        fi
