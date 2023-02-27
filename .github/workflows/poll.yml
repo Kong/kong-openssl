@@ -58,7 +58,7 @@ jobs:
 
           git checkout -b "$branch"
 
-          echo "$fresh" > .env
+          echo "OPENSSL_VERSION=${fresh}" > .env
           git add .env
           git commit -m "chore(*): update OpenSSL to ${fresh}"
 
