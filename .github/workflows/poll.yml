@@ -15,6 +15,10 @@ on: # yamllint disable-line rule:truthy
         type: boolean
         default: false
         description: enable debug output
+      version:
+        type: string
+        required: false
+        description: manually supply openssl version
 
 jobs:
   release:
@@ -23,6 +27,18 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    - name: Check OpenSSL Website
+      id: site
+      run: |
+        set -eo pipefail
+
+        fresh="$(
+          grep -Eo -m1 -i '1\.1\.1.*available' <(
+            curl -Ls 'https://www.openssl.org/news/newslog.html'
+          ) | cut -d' ' -f1
+        )"
+
+        echo "fresh=${fresh}" >> $GITHUB_OUTPUT
     - name: Create PR
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -32,11 +48,11 @@ jobs:
           set -x
         fi
 
-        fresh="$(
-          grep -Eo -m1 -i '1\.1\.1.*available' <(
-            curl -Ls 'https://www.openssl.org/news/newslog.html'
-          ) | cut -d' ' -f1
-        )"
+        if [ -n '${{ inputs.version }}' ]; then
+          fresh='${{ inputs.version }}'
+        else
+          fresh=${{ steps.site.outputs.version }}
+        fi
 
         source .env
         stale="$OPENSSL_VERSION"
