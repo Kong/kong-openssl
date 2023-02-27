@@ -6,6 +6,15 @@ on: # yamllint disable-line rule:truthy
   # wednesday, friday at 00:00
   - cron: 0 0 * * 3,5
   workflow_dispatch:
+    inputs:
+      force:
+        type: boolean
+        default: false
+        description: force PR creation
+      debug:
+        type: boolean
+        default: false
+        description: enable debug output
 
 jobs:
   release:
@@ -17,7 +26,8 @@ jobs:
     - name: Create PR
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        DEBUG: ${{ runner.debug == '1' && '1' || '' }}
+        DEBUG: ${{ inputs.debug == 'true' || (runner.debug == '1' && '1' || '') }}
+        FORCE: ${{ inputs.force }}
       run: |
         if [ -n "${DEBUG:-}" ]; then
           set -x
@@ -34,7 +44,7 @@ jobs:
 
         message="chore(*): update OpenSSL to ${fresh}"
 
-        if [[ "$fresh" != "$stale" ]] ; then
+        if ${FORCE} || [[ "$fresh" != "$stale" ]]; then
 
           # PR already created for fresh version
           if gh pr list | grep "$message"; then
