@@ -1,5 +1,5 @@
 ---
-name: Release
+name: Poll
 
 on: # yamllint disable-line rule:truthy
   schedule:
@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Create PR
       env:
-        GITHUB_TOKEN: ${{ secrets.token }}
+        GH_TOKEN: ${{ github.token }}
         DEBUG: ${{ runner.debug == '1' && '1' || '' }}
       run: |
         if [ -n "${DEBUG:-}" ]; then
