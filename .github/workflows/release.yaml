@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Release
       id: release
-      uses: ahmadnassri/action-semantic-release@v2.2.5
+      uses: ahmadnassri/action-semantic-release@v2.2.6
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
