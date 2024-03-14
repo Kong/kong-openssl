@@ -49,7 +49,7 @@ jobs:
       run: make build/package
     - name: Log in to the Container registry
       if: ${{ needs.release.outputs.published == 'true' }}
-      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+      uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
@@ -98,7 +98,7 @@ jobs:
     steps:
     - name: Log in to the Container registry
       if: ${{ needs.release.outputs.published == 'true' }}
-      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+      uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
